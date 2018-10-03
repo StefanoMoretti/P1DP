@@ -4,28 +4,22 @@ Created on Thu Sep 13 11:01:36 2018
 @author: ricar
 """
 
-import json   
-with open("Card.json", "r") as file:
-    json_data = file.read().strip()  
-
-if json_data:
-    comandas = json.loads(json_data)
-else:
-    comanda = {}
-
-
 comandas = {1 : {}}
 cardapio = {}
 
 rodandogeral =  True
 while rodandogeral:
     
-    escolha_1 = input("O que deseja acessar? (Menu ou Comanda) :  ")
+    escolha_1 = input("O que deseja acessar? (Menu, Comanda ou 0 para sair) :  ")
    
     if escolha_1 == "Comanda": 
         Comanda = int(input("Digite o numero da comanda:  "))
-        if Comanda not in comandas:
-            comandas[Comanda] = 0
+        if Comanda < 1:
+            print('Numero de comanda inválido')
+            break
+        else:
+            if Comanda not in comandas:
+                comandas[Comanda] = 0
             
         rodando = True
         while rodando:
@@ -52,17 +46,17 @@ while rodandogeral:
                     quantidade = int(input("Quantidade: "))
                     preco_unitario = cardapio[novo_produto]
                     preco_total = quantidade*preco_unitario
-                    comandas[Comanda][novo_produto] = quantidade
+                    comandas[Comanda][novo_produto] = preco_total
                     print("Item Adicionado")  
                         
                         
             elif escolha == 2:
                             
-                remove_produto = input("Retirar o Profuto: ")
+                remove_produto = input("Retirar o Produto: ")
                 remove_produto = remove_produto.lower()
-                while remove_produto not in comandas[Comanda]:
+                if remove_produto not in comandas[Comanda]:
                     print("Produto não encontrado!")
-                    remove_produto = input("Nome do Produto: ")
+                else:
                     del comandas[Comanda][remove_produto]
                     print("Item removido")
         
@@ -105,6 +99,7 @@ while rodandogeral:
             print("1: Imprimir cardápio")
             print("2: Adcionar item ao cardápio")
             print("3: Modificar preço de produto")
+            print("4: Remover produto")
             c = int(input("O que deseja fazer?:  "))
             
             if c == 0:
@@ -124,17 +119,33 @@ while rodandogeral:
                     print('Produto já existente')
                 else:
                     preco_novo_item = float(input("Qual o preço unitário?: "))
-                    cardapio[novo_item] = preco_novo_item
-                    print("produto adcionado ao cardapio.") 
-        
-        
+                    if preco_novo_item > 0:
+                        cardapio[novo_item] = preco_novo_item
+                        print("Produto adcionado ao cardapio.") 
+                    
+                    else:
+                        print('Valor negativo inválido')
+                    
             elif c == 3:
                 product = input("Qual produto você deseja alterar?: ")
                 if product not in cardapio:
                     print ('Produto não disponível')
                 else:
                     novo_preco = int(input("Qual o novo preço?: "))
-                    cardapio[product] = novo_preco
+                    if novo_preco > 0:
+                        cardapio[product] = novo_preco
+                        print('Valor alterado')
+                    else:
+                        print('Valor negativo inválido')
+                        
+            elif c == 4:
+                rem = input('Qual produto deseja remover?:  ')
+                if rem not in cardapio:
+                    print('Produto não disponível')
+                else:
+                    cardapio.__delitem__(rem)
+                    print('Produto removido')
+                    
         
     else:
         if escolha_1 == '0':
